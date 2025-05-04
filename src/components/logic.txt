@@ -1,0 +1,10 @@
+logic 
+logic 
+1. Initialize the game with a 4x4 grid.
+2. Randomly place two numbers (2 or 4) on the grid at the start of the game.
+3. Allow the player to swipe in four dir (upections, down, left, right).
+4. Combine tiles if there is same nomber 
+5. Add a new random number (2 or 4) to an empty spot on the grid after each move.
+6. Check for a win condition 2048
+7. Check for a game over if no valid move 
+8. Update the score based on the value of combined tiles. USe local storage to store best score 
