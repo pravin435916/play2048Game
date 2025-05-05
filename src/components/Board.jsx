@@ -4,6 +4,8 @@ const SIZE = 4; // 4 * 4 Matrix
 import bg from "../assets/bg-hero.avif";
 import { VscDebugRestart } from "react-icons/vsc";
 import { GrUndo } from "react-icons/gr";
+import Rule from "./Rule";
+import Footer from "./Footer";
 const generateEmptyGrid = () =>
   Array(SIZE).fill(0).map(() => Array(SIZE).fill(0)); // empty grid
 
@@ -167,7 +169,9 @@ const Board  = () => {
   const [history, setHistory] = useState([]);
 
   const restartGame = () => {
-    const freshGrid = placeRandom(placeRandom(generateEmptyGrid()));
+    const freshGrid = generateEmptyGrid();
+    placeRandom(freshGrid);  // 2
+    placeRandom(freshGrid); // 4
     setGrid(freshGrid);
     setScore(0);
     setGameOver(false);
@@ -214,7 +218,7 @@ const Board  = () => {
         setGrid(updatedGrid);
         const newScore = score + scoreRef.current;
         setScore(newScore);
-        if (newScore > bestScore) {
+        if (newScore > bestScore) {  // update best score
           setBestScore(newScore);
           localStorage.setItem("bestScore", newScore);
         }
@@ -256,19 +260,19 @@ const Board  = () => {
   console.log("Score:", score);
 
   return (
-    <div className="font-mono flex flex-col md:flex-row justify-center items-start gap-10 min-h-screen p-4">
+    <div className="font-mono flex flex-col md:flex-row justify-center items-start gap-10 min-h-screen p-4 w-full overflow-hidden">
       <img src={bg} alt="bg-hero" className="fixed top-0 left-0 w-full h-full object-cover -z-10" />
       {/* Left: Game Section */}
-      <h1 className="absolute text-5xl text-center font-extrabold text-black mb-6 drop-shadow-lg  md:text-left">
+      <h1 className="absolute top-2 text-5xl text-center font-extrabold text-black mb-6 drop-shadow-lg ">
           2048 Game
         </h1>
-      <div className="flex flex-col items-center gap-6 mt-14">
-        <div className="flex gap-8 mb-6 z-10">
-          <div className="bg-white shadow-lg rounded-xl flex justify-center flex-col items-center px-10 py-2 gap-2">
+      <div className="flex flex-col justify-center overflow-hidden items-center gap-6 mt-14 ">
+        <div className="flex gap-2 sm:gap-8 mb-6 z-10">
+          <div className="bg-white shadow-lg rounded-xl flex justify-center flex-col items-center px-4 sm:px-10 sm:py-2 gap-2">
             <div className="text-xl font-semibold">Score</div>
             <div className="text-3xl">{score}</div>
           </div>
-          <div className="bg-white shadow-lg rounded-xl flex justify-center flex-col items-center px-10 py-2 gap-2">
+          <div className="bg-white shadow-lg rounded-xl flex justify-center flex-col items-center px-4 sm:px-10 sm:py-2 gap-2">
             <div className="text-xl font-semibold">Best</div>
             <div className="text-3xl">{bestScore}</div>
           </div>
@@ -283,44 +287,30 @@ const Board  = () => {
             <button
               title="Undo"
               onClick={handleUndo}
-              className="cursor-pointer flex gap-2 h-max p-4 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white rounded shadow"
+              className="cursor-pointer flex gap-2 h-max p-4 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white shadow"
             >
               <GrUndo size={30} />
             </button>
           </div>
-
         </div>
 
-        <div className="grid grid-cols-4 gap-4 bg-gray-300 p-6 rounded-xl shadow-xl">
+        <div className="grid grid-cols-4 gap-2 sm:gap-4 bg-gray-300 p-2 sm:p-6 rounded-xl shadow-xl">
           {grid.map((row, i) =>
             row.map((val, j) => (
               <div
                 key={`${i}-${j}`}
-                className={`w-20 h-20 flex items-center justify-center font-bold text-2xl rounded-xl ${getTileColor(val)} transition duration-300`}
+                className={`h-16 w-16 sm:w-20 sm:h-20 flex items-center justify-center font-bold text-2xl rounded-xl ${getTileColor(val)} transition duration-300`}
               >
-                {val !== 0 ? val : ""}
+                {val !== 0 ? val : ""} {/* Show value if not 0 */}
               </div>
             ))
           )}
         </div>
       </div>
       {/* Right: Rules Section */}
-      <div className="p-4  rounded-3xl text-black inset-0 backdrop-blur-sm bg-blue-200/30 z-40 my-auto h-max flex items-center flex-col">
-        <h2 className="text-2xl font-bold mb-4">How to Play</h2>
-        <ul className="list-disc list-inside space-y-2 text-black">
-          <li>Use arrow keys (← ↑ → ↓) to move tiles.</li>
-          <li>When two tiles with the same number touch, they merge into one.</li>
-          <li>Each merge increases your score by the tile's value.</li>
-          <li>Reach the 2048 tile to win the game.</li>
-          <li>Use Undo to revert your last move.</li>
-          <li>Game ends when no more valid moves are possible.</li>
-        </ul>
-      </div>
+       <Rule />
       {/* footer  */}
-      <div className="fixed bottom-0 right-0 p-4 bg-transparant shadow-lg text-center text-white">
-        <p className="text-sm">Made with ❤️ by Pravin</p>
-        <p className="text-sm">Feel free to play and modify!</p>
-      </div>
+       <Footer />
       {(gameOver || win) && (
         <div className="fixed inset-0 backdrop-blur-sm bg-blue-200/30 z-40">
           <div className="absolute flex items-center flex-col top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
